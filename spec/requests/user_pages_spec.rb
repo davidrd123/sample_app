@@ -37,27 +37,22 @@ describe "User pages" do
         fill_in "Email",        with: "user@example.com"
         fill_in "Password",     with: "foobar"
         fill_in "Confirmation", with: "foobar"
-      
-      
-        describe "followed by signout" do
-          before { click_link "Sign out" }
-          it { should_have_link('Sign in') }
-        end
       end
+     
+      describe "after saving the user" do
+        before { click_button "Sign up"}
+        let(:user) { User.find_by_email('user@example.com') }
 
+        it { should have_selector('title', text: user.name) }
+        it { should have_selector('div.flash.success', text: 'Welcome to the Sample App!') }
+      
+        it { should have_link('Sign out') }
+      end     
+    
       it "should create a user" do
         expect { click_button "Sign up" }.to change(User, :count).by(1)
-      end
-    end
-
-    describe "after saving the user" do
-      before { click_button "Sign up"}
-      let(:user) { User.find_by_email('user@example.com') }
-
-      it { should have_selector('title', text: user.name) }
-      it { should have_selector('div.flash.success', text: 'Welcome') }
-      
-      it { should have_link('Sign out') }
+      end  
     end
   end
 end
+
